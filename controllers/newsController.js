@@ -1,5 +1,4 @@
-const {parse} = require("../parse");
-const mongoose = require("mongoose")
+const {parse} = require("../parse")
 const News = require("../models/News")
 
 const saveNewsToDb = async (news) => {
@@ -28,14 +27,14 @@ class NewsController {
         try {
             const newsList = await parse()
             if(!newsList.length) return res.status(200).json({message: "No news found"})
-            // await newsList.forEach(async elem => await saveNewsToDb(elem))
             for(let news in newsList) {
-               await saveNewsToDb(newsList[news])
+                console.log(newsList[news])
+                await saveNewsToDb(newsList[news])
             }
             res.status(200).json({message: "Parsed"})
         } catch (e) {
-            console.log(e)
-            res.status(400).json({message: "Error parse news"}, e)
+            // console.log(e)
+            res.status(400).json({message: "Error parse news"})
         }
     }
 }

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Post from "../components/Post";
 import {IPost} from "../models/IPost";
 import axios from "axios";
+import "./HomePage.css"
 
 interface HomePageProps {
     posts: IPost[]
@@ -25,9 +26,23 @@ const HomePage:React.FC<HomePageProps> = ({posts, newsLoading, fetchPosts}) => {
     }
 
     return (
-        <div style={{textAlign: "center"}}>
-            <button className={"btn btn-outline-success"} onClick={parsePosts} disabled={newsLoading || parseLoading}>{!(newsLoading || parseLoading) ? "Обновить новости" : "Обновление..."}</button>
-            {posts.map((post) => <Post key={post._id} post={post}/>)}
+        <div>
+            {
+                newsLoading ?
+                    <div className="lds-ring">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    :
+                <>
+                <button style={{position: "absolute", left: 80, top: 30}} className={"btn btn-outline-success"}
+                        onClick={parsePosts}
+                        disabled={newsLoading || parseLoading}>{!(newsLoading || parseLoading) ? "Обновить новости" : "Обновление..."}</button>
+                {posts.map((post) => <Post key={post._id} post={post}/>)}
+                </>
+            }
         </div>
     );
 };

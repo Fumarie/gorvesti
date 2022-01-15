@@ -1,7 +1,7 @@
 const axios = require("axios")
 const cheerio = require("cheerio")
 
-const domen = 'https://gorvesti.ru/'
+const domen = 'https://gorvesti.ru'
 
 const monthNames = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн",
     "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"
@@ -11,46 +11,37 @@ const getPage = async (url) => {
     try {
         return await axios.get(url).then(response => response.data)
     } catch (e) {
-        console.log(e)
+        // console.log(e)
         throw e
     }
 }
 
 const parse = async () => {
-    const newsLinks = await getNewsLinks()
+    let newsLinks = []
+    for(let i = 1; i <= 5; i++) {
+        const newLinks = await getNewsLinks(i)
+        newsLinks.push(...newLinks)
+    }
 
     const news = []
 
     for (const elem of newsLinks) {
+        console.log(elem)
         const newsData = await getNewsInfo(elem)
         news.push(newsData)
     }
 
-    console.log(news[0])
-
-    // news.forEach(elem => saveNewsToDb(elem))
-    // await saveNewsToDb(news[0])
-    return news ? news : []
+    return news
 }
 
-// const saveNewsToDb = async (news) => {
-//     const newsObject = new News(news)
-//     try {
-//         const candidate = await News.findOne({fullLink: news.fullLink})
-//         console.log(candidate)
-//         if(candidate) return
-//         await newsObject.save()
-//     } catch (e) {
-//         console.warn("Error saving news: ", news)
-//     }
-// }
-
-const getNewsLinks = async () => {
-    const page = await getPage(domen).then(result => result).catch(async () => await getPage(domen))
+const getNewsLinks = async (pageNumber) => {
+    const pageRef = `${domen}/feed/${pageNumber}`
+    console.log(pageRef)
+    const page = await getPage(pageRef).then(result => result).catch(async () => await getPage(pageRef))
     const $ = await cheerio.load(page)
     const newsLinks = []
 
-    $('body > div.container-fluid.body > div > div > div > div.col-l-side.order-lg-0 > div > div.section-feed.section-feed-sm > a')
+    $('body > div.container-fluid.body > div > div > div > div.col-article.order-lg-1 > div > article > div.feed.feed-items > div:nth-child(1) > div.itm-body > div > div.itm-title > a')
         .each((i, elem) => {
             const href = $(elem).attr('href')
             newsLinks.push(href)
