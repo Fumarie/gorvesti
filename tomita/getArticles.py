@@ -3,7 +3,7 @@ import os
 
 os.chdir('/home/vagrant/tomita-parser/build/bin') 
 client = MongoClient("mongodb+srv://Guest:1Q2W3E4R@cluster0.jlax4.mongodb.net/gorvesti?retryWrites=true&w=majority")
-database = client["lingvist"]
+database = client["gorvesti"]
 collection = database["news"]
 tomita = database["tomita"]
 
