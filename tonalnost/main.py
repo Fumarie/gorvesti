@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
     # Оценка предложений из БД
     client = MongoClient("mongodb+srv://Guest:1Q2W3E4R@cluster0.jlax4.mongodb.net/gorvesti?retryWrites=true&w=majority")
-    database = client["lingvist"]
+    database = client["gorvesti"]
     collection = database["news"]
     for news in collection.find( {} ): 
         text = news['text']
